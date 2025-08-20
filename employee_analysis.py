@@ -3,7 +3,6 @@
 # Business Case: Employee Performance Analysis
 
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 
 # -----------------------------
@@ -21,29 +20,27 @@ EMP008,IT,Asia Pacific,85.60,7,3.5
 EMP009,Finance,Latin America,78.40,9,3.7
 EMP010,Marketing,Europe,88.20,5,4.1
 """
-# Load into pandas DataFrame
 from io import StringIO
 df = pd.read_csv(StringIO(data))
 
 # -----------------------------
 # Step 2: Frequency count for IT department
 # -----------------------------
-it_count = (df["department"] == "IT").sum()
+it_count = df[df["department"] == "IT"].shape[0]
 print(f"Frequency count for IT department: {it_count}")
 
 # -----------------------------
 # Step 3: Create histogram
 # -----------------------------
-sns.set_style("whitegrid")
 plt.figure(figsize=(6, 6))
-ax = sns.countplot(x="department", data=df, palette="Set2")
+df["department"].value_counts().plot(kind="bar", color=["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3"])
 
-ax.set_title("Employee Count by Department", fontsize=14, pad=15)
-ax.set_xlabel("Department")
-ax.set_ylabel("Count")
+plt.title("Employee Count by Department", fontsize=14, pad=15)
+plt.xlabel("Department")
+plt.ylabel("Count")
 
 plt.tight_layout()
-plt.savefig("histogram.png")  # save as PNG
+plt.savefig("histogram.png")
 
 # -----------------------------
 # Step 4: Export as HTML file
