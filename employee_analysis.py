@@ -43,22 +43,53 @@ plt.tight_layout()
 plt.savefig("histogram.png")
 
 # -----------------------------
-# Step 4: Export as HTML file
+# Step 4: Export as HTML file with embedded image
 # -----------------------------
-html_content = f"""
+import base64
+
+# Convert image to base64 for embedding
+with open("histogram.png", "rb") as img_file:
+    img_base64 = base64.b64encode(img_file.read()).decode('utf-8')
+
+html_content = f"""<!DOCTYPE html>
 <html>
 <head>
     <title>Employee Performance Analysis</title>
+    <style>
+        body {{ font-family: Arial, sans-serif; margin: 40px; }}
+        h1 {{ color: #333; }}
+        h2 {{ color: #666; }}
+        .email {{ background-color: #f0f0f0; padding: 10px; border-radius: 5px; }}
+        .result {{ background-color: #e8f5e8; padding: 10px; border-radius: 5px; margin: 20px 0; }}
+        img {{ border: 1px solid #ddd; border-radius: 5px; }}
+    </style>
 </head>
 <body>
     <h1>Employee Performance Analysis</h1>
-    <p><strong>Email:</strong> 22f3002631@ds.study.iitm.ac.in</p>
-    <p>Frequency count for IT department: {it_count}</p>
-    <h2>Histogram of Departments</h2>
-    <img src="histogram.png" alt="Histogram" width="500">
+    <div class="email">
+        <p><strong>Email:</strong> 22f3002631@ds.study.iitm.ac.in</p>
+    </div>
+
+    <h2>Analysis Results</h2>
+    <div class="result">
+        <p><strong>Frequency count for IT department: {it_count}</strong></p>
+    </div>
+
+    <h2>Department Distribution Histogram</h2>
+    <p>The histogram below shows the distribution of employees across different departments:</p>
+    <img src="data:image/png;base64,{img_base64}" alt="Department Distribution Histogram" style="max-width: 100%; height: auto;">
+
+    <h2>Summary</h2>
+    <ul>
+        <li>Total employees analyzed: {len(df)}</li>
+        <li>IT department has {it_count} employees</li>
+        <li>Departments: {', '.join(df['department'].unique())}</li>
+    </ul>
 </body>
 </html>
 """
 
 with open("employee_analysis.html", "w", encoding="utf-8") as f:
     f.write(html_content)
+
+print("HTML file created successfully with embedded visualization!")
